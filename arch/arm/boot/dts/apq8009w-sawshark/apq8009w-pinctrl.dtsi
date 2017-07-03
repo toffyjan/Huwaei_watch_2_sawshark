@@ -1,0 +1,967 @@
+/* Copyright (c) 2016,  HUAWEI TECHNOLOGIES CO., LTD.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+&msm_gpio {
+	/*delete the QCOM GPIO used by Huawei*/
+	/delete-node/ vdd_spkdrv;
+
+	/delete-node/ tpiu_seta_2;
+	/delete-node/ tpiu_seta_3;
+	/delete-node/ tpiu_seta_4;
+	/delete-node/ tpiu_seta_12;
+	/delete-node/ tpiu_seta_14;
+	/delete-node/ tpiu_setb_1;
+	/delete-node/ tpiu_setb_2;
+	/delete-node/ tpiu_setb_3;
+	/delete-node/ tpiu_setb_5;
+	/delete-node/ tpiu_setb_6;
+	/delete-node/ tpiu_setb_7;
+	/delete-node/ tpiu_setb_8;
+	/delete-node/ tpiu_setb_9;
+	/delete-node/ tpiu_setb_10;
+	/delete-node/ tpiu_setb_11;
+
+	/delete-node/ wcnss_pmux_5wire;
+	/delete-node/ wcnss_pmux_gpio;
+
+	/delete-node/ tlmm_gpio_key;
+
+	/delete-node/ pmx_ts_ite_reset_active;
+	/delete-node/ pmx_ts_ite_reset_suspend;
+
+	/delete-node/ pmx_mdss;
+	/delete-node/ pmx_i2c_2;
+	/delete-node/ pmx_i2c_4;
+	/delete-node/ trigout_a0;
+	/delete-node/ sdhc2_cd_pin;
+
+	/*Mars configuration begin*/
+	spi1 {
+		spi1_default: spi1_default {
+			mux {
+				pins = "gpio12", "gpio13",
+					"gpio15";
+				function = "blsp_spi4";
+			};
+			config {
+				pins = "gpio12", "gpio13",
+					"gpio15";
+				drive-strength = <12>; /* 12 MA */
+				bias-disable; /* No PULL */
+			};
+		};
+		spi1_sleep: spi1_sleep {
+			mux {
+				pins = "gpio12", "gpio13",
+					"gpio15";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio12", "gpio13",
+					"gpio15";
+				drive-strength = <2>; /* 2 MA */
+				bias-pull-down; /* pull down */
+			};
+		};
+		spi1_cs0_active: spi1_cs0_active {
+			mux {
+				pins = "gpio14";
+				function = "blsp_spi4";
+			};
+			config {
+				pins = "gpio14";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+		spi1_cs0_sleep: spi1_cs0_sleep {
+			mux {
+				pins = "gpio14";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio14";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+	};
+
+	/*change the GPIO of TP*/
+	pmx_ts_int_default {
+		ts_int_default: ts_int_default {
+			mux {
+				pins = "gpio94";
+			};
+
+			config {
+				pins = "gpio94";
+				drive-strength = <8>;
+				bias-pull-up;
+			};
+		};
+	};
+
+	pmx_ts_reset_default {
+		ts_reset_default: ts_reset_default {
+			mux {
+				pins = "gpio95";
+			};
+
+			config {
+				pins = "gpio95";
+				bias-disable;
+			};
+		};
+	};
+
+	pmx_ts_release {
+		ts_release: ts_release {
+			mux {
+				pins = "gpio94", "gpio95";
+			};
+
+			config {
+				pins = "gpio94", "gpio95";
+			};
+		};
+	};
+
+	/*MCU Reset*/
+	mcu_reset{
+		mcu_reset_active:mcu_reset_active {
+			mux {
+				pins = "gpio99";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio99";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+		mcu_reset_sleep:mcu_reset_sleep {
+			mux {
+				pins = "gpio99";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio99";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+	};
+
+	/*MCU Senser power*/
+	mcu_senserpower{
+		mcu_senser_power_active:mcu_senser_power_active {
+			mux {
+				pins = "gpio98";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio98";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+		mcu_senser_power_sleep:mcu_senser_power_sleep {
+			mux {
+				pins = "gpio98";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio98";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+	};
+
+	/*BT high speed uart*/
+	bt_uart{
+		bt_uart_data_active:bt_uart_data_active {
+			mux {
+				pins = "gpio20","gpio21";
+				function = "blsp_uart2";
+			};
+			config {
+				pins = "gpio20","gpio21";
+				drive-strength = <2>;
+				bias-pull-up;
+			};
+		};
+		bt_uart_data_suspend:bt_uart_data_suspend {
+			mux {
+				pins = "gpio20","gpio21";
+				function = "blsp_uart2";
+			};
+			config {
+				pins = "gpio20","gpio21";
+				drive-strength = <2>;
+				bias-pull-up;
+			};
+		};
+
+		bt_uart_ctl_active:bt_uart_ctl_active {
+			mux {
+				pins = "gpio111","gpio112";
+				function = "blsp_uart2";
+			};
+			config {
+				pins = "gpio111","gpio112";
+				drive-strength = <2>;
+				bias-pull-up;
+			};
+		};
+		bt_uart_ctl_suspend:bt_uart_ctl_suspend {
+			mux {
+				pins = "gpio111","gpio112";
+				function = "blsp_uart2";
+			};
+			config {
+				pins = "gpio111","gpio112";
+				drive-strength = <2>;
+				bias-pull-up;
+			};
+		};
+	};
+
+	/*OLED init ctrl*/
+	oled_init{
+		oled_init_ctrl_active:oled_init_ctrl_active {
+			mux {
+				pins = "gpio22";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio22";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+		oled_init_ctrl_suspend:oled_init_ctrl_suspend {
+			mux {
+				pins = "gpio22";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio22";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+	};
+
+	/*Modify GPIO24 */
+	pmx_mdss_te {
+		mdss_te_active: mdss_te_active {
+			config {
+				/delete-property/ bias-pull-down;
+				bias-pull-up; /* pull up */
+			};
+		};
+
+		mdss_te_suspend: mdss_te_suspend {
+			config {
+				/delete-property/ bias-pull-down;
+				bias-pull-up; /* pull up */
+			};
+		};
+	};
+
+	pmx_mdss {
+			mdss_dsi_active: mdss_dsi_active {
+				mux {
+					pins = "gpio25", "gpio37";
+					function = "gpio";
+				};
+
+				config {
+					pins = "gpio25", "gpio37";
+					drive-strength = <8>; /* 8 mA */
+					bias-disable; /* no pull */
+					output-low;
+				};
+			};
+
+			mdss_dsi_suspend: mdss_dsi_suspend {
+				mux {
+					pins = "gpio25", "gpio37";
+					function = "gpio";
+				};
+
+				config {
+					pins = "gpio25", "gpio37";
+					drive-strength = <2>; /* 2 mA */
+					bias-disable; /* on pull */
+					output-low;
+				};
+			};
+		};
+
+	/*AP status:show wakeup or sleep status of AP to MCU*/
+	ap_status{
+		ap_status_active:ap_status_active {
+			mux {
+				pins = "gpio26";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio26";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+		ap_status_suspend:ap_status_suspend {
+			mux {
+				pins = "gpio26";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio26";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+	};
+
+	/*The interrupt from WIFI to wakeup AP*/
+	wifi_wakeup_ap{
+		wifi_wakeup_ap_active:wifi_wakeup_ap_active {
+			mux {
+				pins = "gpio28";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio28";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+		wifi_wakeup_ap_suspend:wifi_wakeup_ap_suspend {
+			mux {
+				pins = "gpio28";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio28";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+	};
+
+	/*the interrupt from MCU to wakeup dispaly */
+	mcu_wakeup_display{
+		mcu_wakeup_display_active:mcu_wakeup_display_active {
+			mux {
+				pins = "gpio31";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio31";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+		mcu_wakeup_display_suspend:mcu_wakeup_display_suspend {
+			mux {
+				pins = "gpio31";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio31";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+	};
+
+	/*the interrupt from BT to wakeup AP */
+	bt_wakeup_ap{
+		bt_wakeup_ap_active:bt_wakeup_ap_active {
+			mux {
+				pins = "gpio47";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio47";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+		bt_wakeup_ap_suspend:bt_wakeup_ap_suspend {
+			mux {
+				pins = "gpio47";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio47";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+	};
+
+	/*the interrupt from AP to wakeup MCU */
+	ap_wakeup_mcu{
+		ap_wakeup_mcu_active:ap_wakeup_mcu_active {
+			mux {
+				pins = "gpio49";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio49";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+		ap_wakeup_mcu_suspend:ap_wakeup_mcu_suspend {
+			mux {
+				pins = "gpio49";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio49";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+	};
+
+	/*the interrupt from MCU to wakeup AP */
+	mcu_wakeup_ap{
+		mcu_wakeup_ap_active:mcu_wakeup_ap_active {
+			mux {
+				pins = "gpio50";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio50";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+		mcu_wakeup_ap_suspend:mcu_wakeup_ap_suspend {
+			mux {
+				pins = "gpio50";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio50";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+	};
+
+	/*battery and UIM alarm signal*/
+	bat_uim_alarm{
+		bat_uim_alarm_active:bat_uim_alarm_active {
+			mux {
+				pins = "gpio57";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio57";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+		bat_uim_alarm_suspend:bat_uim_alarm_suspend {
+			mux {
+				pins = "gpio57";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio57";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+	};
+
+	/*the interrupt of charger */
+	charger_int{
+		charger_int_default:charger_int_default {
+			mux {
+				pins = "gpio58";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio58";
+				drive-strength = <2>;
+				bias-pull-up;
+			};
+		};
+	};
+
+	/*wireless receiver interrupt to AP*/
+	wireless_int{
+		wireless_int_default: wireless_int_default  {
+			mux {
+				pins = "gpio43";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio43";
+				drive-strength = <2>;
+				bias-pull-up;
+			};
+		};
+	};
+
+	/*NFC function key interrupt to AP*/
+	func_key_int{
+		func_key_int_default: func_key_int_default  {
+			mux {
+				pins = "gpio96";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio96";
+				drive-strength = <2>;
+				bias-pull-up;
+			};
+		};
+	};
+
+	/*AP mask wireless receiver interrupt*/
+	mask_wireless_int{
+		mask_wireless_int_default: mask_wireless_int_default  {
+			mux {
+				pins = "gpio23";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio23";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+	};
+
+	/*vibrator enable*/
+	vibrator_enable{
+		vibrator_enable_active:vibrator_enable_active {
+			mux {
+				pins = "gpio92";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio92";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+		vibrator_enable_suspend:vibrator_enable_suspend {
+			mux {
+				pins = "gpio92";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio92";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+	};
+
+	/*AP read sync: When PU,MCU can TX and AP can RX*/
+	ap_read_sync{
+		ap_read_sync_active:ap_read_sync_active {
+			mux {
+				pins = "gpio36";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio36";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+		ap_read_sync_suspend:ap_read_sync_suspend {
+			mux {
+				pins = "gpio36";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio36";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+	};
+
+	/*AP write sync: When PU,MCU can RX and AP can TX*/
+	ap_write_sync{
+		ap_write_sync_active:ap_write_sync_active {
+			mux {
+				pins = "gpio14";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio14";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+		ap_write_sync_suspend:ap_write_sync_suspend {
+			mux {
+				pins = "gpio14";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio14";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+	};
+
+	/*the interrupt from AP to wakeup BT */
+	ap_wakeup_bt{
+		ap_wakeup_bt_active:ap_wakeup_bt_active {
+			mux {
+				pins = "gpio38";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio38";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+		ap_wakeup_bt_suspend:ap_wakeup_bt_suspend {
+			mux {
+				pins = "gpio38";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio38";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+	};
+
+	/*WIFI reg on*/
+	wifi_reg_on{
+		wifi_reg_on_active:wifi_reg_on_active {
+			mux {
+				pins = "gpio39";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio39";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+		wifi_reg_on_suspend:wifi_reg_on_suspend {
+			mux {
+				pins = "gpio39";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio39";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+	};
+
+	/*BT reg on*/
+	bt_reg_on{
+		bt_reg_on_active:bt_reg_on_active {
+			mux {
+				pins = "gpio52";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio52";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+		bt_reg_on_suspend:bt_reg_on_suspend {
+			mux {
+				pins = "gpio52";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio52";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+	};
+
+	/*PCB version 0*/
+	pcb_ver_0{
+		pcb_ver_0_active:pcb_ver_0_active {
+			mux {
+				pins = "gpio90";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio90";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+		pcb_ver_0_suspend:pcb_ver_0_suspend {
+			mux {
+				pins = "gpio90";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio90";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+	};
+
+	/*PCB version 1*/
+	pcb_ver_1{
+		pcb_ver_1_active:pcb_ver_1_active {
+			mux {
+				pins = "gpio91";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio91";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+		pcb_ver_1_suspend:pcb_ver_1_suspend {
+			mux {
+				pins = "gpio91";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio91";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+	};
+
+	/*MCU boot 0*/
+	mcu_boot_0{
+		mcu_boot_0_active:mcu_boot_0_active {
+			mux {
+				pins = "gpio41";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio41";
+				drive-strength = <2>;
+				bias-disable ;
+			};
+		};
+		mcu_boot_0_suspend:mcu_boot_0_suspend {
+			mux {
+				pins = "gpio41";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio41";
+				drive-strength = <2>;
+				bias-disable ;
+			};
+		};
+	};
+	/*MCU boot 1*/
+	mcu_boot_1{
+		mcu_boot_1_active:mcu_boot_1_active {
+			mux {
+				pins = "gpio42";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio42";
+				drive-strength = <2>;
+				bias-pull-down ;
+			};
+		};
+		mcu_boot_1_suspend:mcu_boot_1_suspend {
+			mux {
+				pins = "gpio42";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio42";
+				drive-strength = <2>;
+				bias-pull-down ;
+			};
+		};
+	};
+
+	/* max17055_alert */
+	max17055_alert_pmux{
+		max17055_alert:max17055_alert {
+			mux {
+				pins = "gpio42";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio42";
+				drive-strength = <2>;
+				bias-pull-up;
+			};
+		};
+	};
+
+	/*For PPG:power Ok note*/
+	power_ok_note{
+		power_ok_note_active:power_ok_note_active {
+			mux {
+				pins = "gpio87";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio87";
+				drive-strength = <2>;
+				bias-disable ;
+			};
+		};
+		power_ok_note_suspend:power_ok_note_suspend {
+			mux {
+				pins = "gpio87";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio87";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+	};
+
+
+	/*cdc ext i2s*/
+	cdc-ext-tlmm-lines{
+		cdc_ext_tlmm_act:ext_tlmm_on {
+			mux {
+				pins = "gpio0","gpio1","gpio2","gpio3";
+				function = "sec_mi2s";
+			};
+			config {
+				pins = "gpio0","gpio1","gpio2","gpio3";
+				drive-strength = <8>;
+			};
+		};
+		cdc_ext_tlmm_sus:ext_tlmm_off {
+			mux {
+				pins = "gpio0","gpio1","gpio2","gpio3";
+				function = "sec_mi2s";
+			};
+			config {
+				pins = "gpio0","gpio1","gpio2","gpio3";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+	};
+
+	/* Change the sdio clock drive-strength */
+	pmx_sdc2_clk {
+		sdc2_clk_on: sdc2_clk_on {
+			config {
+				drive-strength = <8>; /* 8 MA */
+			};
+		};
+	};
+
+	/* SIM Tybe flag*/
+	hw_ver_0{
+		hw_ver_0_active:hw_ver_0_active {
+			mux {
+				pins = "gpio89";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio89";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+		hw_ver_0_suspend:hw_ver_0_suspend {
+			mux {
+				pins = "gpio89";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio89";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+	};
+
+	/* PCB_A VER0 flag */
+	hw_ver_1{
+		hw_ver_1_active:hw_ver_1_active {
+			mux {
+				pins = "gpio97";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio97";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+		hw_ver_1_suspend:hw_ver_1_suspend {
+			mux {
+				pins = "gpio97";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio97";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+	};
+
+	/* PCB_A VER1 flag */
+	hw_ver_2{
+		hw_ver_2_active:hw_ver_2_active {
+			mux {
+				pins = "gpio93";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio93";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+		hw_ver_2_suspend:hw_ver_2_suspend {
+			mux {
+				pins = "gpio93";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio93";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+	};
+};

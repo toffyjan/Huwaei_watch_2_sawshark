@@ -1,0 +1,319 @@
+/* Copyright (c) 2016,  HUAWEI TECHNOLOGIES CO., LTD.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+#include "HB432628EBW-LS-4v4-350mah.dtsi"
+#include "HB432628EBW-DS-4v0-240mah.dtsi"
+&soc {
+    huawei,battid {
+		compatible = "huawei,battid";
+		qcom,battid-vadc = <&pm8916_vadc>;
+		};
+
+    /*ADC and GPIOs for hw version*/
+    huawei,hwversion {
+		compatible = "huawei,hwversion";
+		qcom,hwver0-vadc = <&pm8916_vadc>;/* hwver0 */
+		hwver-gpio1 = <&msm_gpio 89 0>; /*SIM/ESIM*/
+		hwver-gpio2 = <&msm_gpio 97 0>; /*PCBA_0*/
+		hwver-gpio3 = <&msm_gpio 93 0>; /*PCBA_1*/
+		pcbver-gpio1 = <&msm_gpio 90 0>;/*PCB_0*/
+		pcbver-gpio2 = <&msm_gpio 91 0>;/*PCB_1*/
+		pinctrl-names = "default","suspend";
+		pinctrl-0 = <&pcb_ver_0_active &pcb_ver_1_active &hw_ver_0_active &hw_ver_1_active &hw_ver_2_active>;
+		pinctrl-1 = <&pcb_ver_0_suspend &pcb_ver_1_suspend &hw_ver_0_suspend &hw_ver_1_suspend &hw_ver_2_suspend>;
+		};
+
+    gpio_keys {
+                compatible = "gpio-keys";
+                pinctrl-names = "tlmm_gpio_key_active","tlmm_gpio_key_suspend";
+                pinctrl-0 = <&func_key_int_default>;
+                pinctrl-1 = <&func_key_int_default>;
+                button {
+                                label = "GPIO Key UP";
+                                linux,code = <134>;
+                                gpios = <&msm_gpio 96 0x1>;
+                                gpio-key,wakeup;
+                       };
+              };
+
+    i2c@78b9000 {
+		/*delete the qcom charger*/
+		/delete-node/ smb1357-charger@57;
+
+		/*add the mp2661 charger*/
+		mp2661_otg_vreg: mp2661-charger@9 {
+			compatible = "qcom,mp2661-charger";
+			reg = <0x9>;
+			interrupt-parent = <&msm_gpio>;
+			interrupts = <58 8>;
+			pinctrl-names = "default";
+			pinctrl-0 = <&charger_int_default>;
+			regulator-name = "mp2661_otg_vreg";
+
+			qcom,chg-vadc = <&pm8916_vadc>;
+			qcom,chg-adc_tm = <&pm8916_adc_tm>;
+
+			qcom,bms-psy-name = "bms";
+			qcom,using-pmic-therm;
+
+			qcom,cold-batt-decidegc = <0>;
+			qcom,normal-state1-batt-decidegc = <100>;
+			qcom,normal-state2-batt-decidegc = <150>;
+			qcom,normal-state3-batt-decidegc = <200>;
+			qcom,hot-batt-decidegc = <450>;
+
+			qcom,batt-full-mv = <4395>;
+			qcom,batt-full-terminate-ma = <20>;
+			qcom,usb-input-ma = <455>;
+			qcom,usb-input-regulation-mv = <4600>;
+			qcom,batt-charging-ma-max = <450>;
+
+			/* bat temp states charge current */
+			qcom,batt-charging-ma-mitigation = <0 42 127 161 450 0>;
+
+			/* trickle charge parameters */
+			qcom,batt-trickle-charging-ma = <6>;
+			qcom,batt-trickle-to-cc-theshold-mv = <3000>;
+
+			qcom,batt-uvlo-theshold-mv = <2500>;
+			qcom,batt-auto-recharge-delta-mv = <150>;
+
+			qcom,batt-discharging-ma = <2400>;
+			qcom,thermal-regulation-threshold = <120>;
+
+			qcom,batt-cc-chg-timer = <5>;
+
+			qcom,step-charging-batt-full-mv = <4200>;
+			qcom,step-charging-current-ma = <280>;
+			qcom,step-charging-delta-voltage-mv = <200>;
+			qcom,stmr-expiration-count = <0>;
+			qcom,batt-temp-in-normal-state1-count = <0>;
+			qcom,batt-cv-chg-current-delta-ma = <170>;
+			qcom,batt-cv-chg-current-ma = <263>;
+			qcom,repeat-charging-detect-threshold-mv = <4350>;
+
+			status = "ok";
+		};
+
+		/*add the wireless idtp9220 receiver*/
+		idtp9220_otg_vreg: idtp9220-receiver@61 {
+			compatible = "idt,idtp9220-receiver";
+			reg = <0x61>;
+			interrupt-parent = <&msm_gpio>;
+			interrupts = <43 8>;
+			pinctrl-names = "default";
+			pinctrl-0 = <&wireless_int_default &mask_wireless_int_default>;
+			wireless-int-gpio = <&msm_gpio 43 0>;
+			mask-wireless-int-gpio = <&msm_gpio 23 0>;
+
+			status = "disabled";
+		};
+
+		max17055@36 {
+			compatible = "maxim,max17055";
+			reg = <0x36>;
+			interrupt-parent = <&msm_gpio>;
+			interrupts = <42 8>;            /* gpio42 */
+			pinctrl-names = "default";
+			pinctrl-0 = <&max17055_alert>;
+			qcom,chg-psy-name = "battery";
+			maxim,rsns-microohm = <10000>;		/*Current sense resistance in micro Ohm*/
+			maxim,config-type = <3>;			/*EZ:1 SHORT: 2 FULL: 3 BURN: 4*/
+			maxim,cold-temp = <(-450)>;		/*The driver use negative value of cold-temp*/
+			maxim,over-heat-temp = <1000>;		/*Temp is scaled by 10 to reserve more precise*/
+			maxim,dead-volt = <2800>;		/*Dead voltage in millivolts*/
+			maxim,over-volt = <4500>;		/*Over voltage in millivolts*/
+			maxim,enable-por-init;			/*Comment out this line to ignore the configuration data*/
+			maxim,config-data = /bits/ 16 <
+				0x0000 0x0000 0x0000 0x0000 0x0000 					    	/* A/D measurement */
+				0x0000 0x0000 0x0000 0x0000 0x0000 0x00d8 0xe000	    	/* Alert / Status */
+				0x5a00 0x0000 0x034e 0x00a0 0x0000 0xa05f 0x8400			/* App data */
+				0x0000 0x4416 0x0000 0x0000 0x0000 0x860b 0x2241				/* Configs */
+				0x003a 0x123e 0x1b80 0x0d80 0x0680 0x0580   				/* Cell Data */
+				0x1880 0x0000 0x2d80 0x0000				    /* Temp Config (optional) */
+				0x7d00 0xb1a0 0xb850 0xba40 0xbbf0 0xbcc0 0xbda0 0xbdc0     /* Model Data Begin*/
+				0xbe30 0xbf00 0xc0d0 0xc270 0xc8f0 0xd070 0xd640 0xdcb0
+				0x0020 0x04e0 0x10f0 0x1430 0x0020 0x1040 0x4000 0x3e00
+				0x0f00 0x0f70 0x0ef0 0x07c0 0x0730 0x06a0 0x0640 0x0640
+				0x0100 0x0100 0x0100 0x0100 0x0100 0x0100 0x0100 0x0100
+				0x0100 0x0100 0x0100 0x0100 0x0100 0x0100 0x0100 0x0100     /* Model Data End*/
+			>;
+
+			status = "ok";
+		};
+	};
+};
+&pm8916_chg {
+	status = "ok";
+	qcom,use-external-charger;
+};
+&pm8916_bms {
+	status = "ok";
+	qcom,resume-soc = <99>;
+};
+
+/{
+	mtp_batterydata: qcom,battery-data {
+		qcom,rpull-up-kohm = <100>;
+		qcom,vref-batt-therm = <1800000>;
+		/delete-node/ qcom,palladium-batterydata;
+		/delete-node/ qcom,mtp-3000mah;
+	};
+};
+&pm8916_vadc {
+	/delete-node/ chan@30;
+	/*add the mpp2 chan*/
+	chan@11 {
+		label = "batt_therm";
+		reg = <0x11>;
+		qcom,decimation = <0>;
+		qcom,pre-div-channel-scaling = <0>;
+		qcom,calibration-type = "ratiometric";
+		qcom,scale-function = <1>;
+		qcom,hw-settle-time = <0xb>;
+		qcom,fast-avg-setup = <0>;
+	};
+
+	/*add the mpp3 chan*/
+	chan@12 {
+		label = "temp_ambient";
+		reg = <0x12>;
+		qcom,decimation = <0>;
+		qcom,pre-div-channel-scaling = <0>;
+		qcom,calibration-type = "ratiometric";
+		qcom,scale-function = <17>;
+		qcom,hw-settle-time = <0xb>;
+		qcom,fast-avg-setup = <0>;
+	};
+
+	chan@13 {
+		label = "hw_ver0";
+		reg = <0x13>;
+		qcom,decimation = <0>;
+		qcom,pre-div-channel-scaling = <0>;
+		qcom,calibration-type = "ratiometric";
+		qcom,scale-function = <0>;
+		qcom,hw-settle-time = <2>;
+		qcom,fast-avg-setup = <2>;
+	};
+};
+&pm8916_adc_tm {
+	/*delete the qcom charger*/
+	/delete-node/ chan@30;
+
+	/*add the mpp2 batt_therm*/
+	chan@11 {
+		label = "batt_therm";
+		reg = <0x11>;
+		qcom,decimation = <0>;
+		qcom,pre-div-channel-scaling = <0>;
+		qcom,calibration-type = "ratiometric";
+		qcom,scale-function = <1>;
+		qcom,hw-settle-time = <0xb>;
+		qcom,fast-avg-setup = <0x2>;
+		qcom,btm-channel-number = <0x48>;
+	};
+
+	/*add the mpp3 temp_ambient*/
+	chan@12 {
+		label = "temp_ambient";
+		reg = <0x12>;
+		qcom,decimation = <0>;
+		qcom,pre-div-channel-scaling = <0>;
+		qcom,calibration-type = "ratiometric";
+		qcom,scale-function = <17>;
+		qcom,hw-settle-time = <0xb>;
+		qcom,fast-avg-setup = <0x2>;
+		qcom,btm-channel-number = <0x48>;
+	};
+};
+&pm8916_mpps {
+	mpp@a100 { /* MPP 2 */
+		/* batter-therm */
+		qcom,mode = <4>;		/* Digital input ,QPNP_PIN_MODE_AIN*/
+		qcom,src-sel = <0>;		/* QPNP_PIN_SEL_FUNC_CONSTANT */
+		qcom,ain-route = <1>;		/*QPNP_PIN_AIN_AMUX_CH6 */
+		qcom,master-en = <1>;		/* Enable MPP */
+		status = "ok";
+	};
+
+	mpp@a200 { /* MPP 3 */
+		/* temp_ambient */
+		qcom,mode = <4>;		/* Digital input ,QPNP_PIN_MODE_AIN*/
+		qcom,src-sel = <0>;		/* QPNP_PIN_SEL_FUNC_CONSTANT */
+		qcom,ain-route = <2>;		/*QPNP_PIN_AIN_AMUX_CH7 */
+		qcom,master-en = <1>;		/* Enable MPP */
+		status = "ok";
+	};
+
+	mpp@a300{/*MPP 4*/
+		/* hwversion-therm */
+		qcom,mode = <4>;		/* Digital input ,QPNP_PIN_MODE_AIN*/
+		qcom,src-sel = <0>;		/* QPNP_PIN_SEL_FUNC_CONSTANT */
+		qcom,ain-route = <3>;		/*QPNP_PIN_AIN_AMUX_CH8 */
+		qcom,master-en = <1>;		/* Enable MPP */
+	};
+};
+&rpm_bus {
+	rpm-regulator-ldoa5 {
+		regulator-always-on;
+	};
+
+	rpm-regulator-ldoa6 {
+		regulator-always-on;
+	};
+	rpm-regulator-ldoa9 {
+		pm8916_l9: regulator-l9 {
+			regulator-min-microvolt = <3100000>;
+			regulator-max-microvolt = <3100000>;
+			qcom,init-voltage = <3100000>;
+		};
+	};
+	rpm-regulator-ldoa10 {
+		regulator-always-on;
+	};
+
+	rpm-regulator-ldoa1 {
+		status = "disabled";
+	};
+	rpm-regulator-ldoa11 {
+		status = "disabled";
+	};
+	rpm-regulator-ldoa12 {
+		status = "disabled";
+	};
+	rpm-regulator-ldoa14 {
+		status = "disabled";
+	};
+	rpm-regulator-ldoa15 {
+		status = "disabled";
+	};
+	rpm-regulator-ldoa16 {
+		status = "disabled";
+	};
+	rpm-regulator-ldoa18 {
+		status = "disabled";
+	};
+};
+
+&spmi_bus {
+	qcom,pm8916@0 {
+		pm8916_pon: qcom,power-on@800 {
+			compatible = "qcom,qpnp-power-on";
+			qcom,pon_1 {
+				qcom,support-reset = <1>;
+				qcom,s1-timer = <10256>;
+				qcom,s2-timer = <10>;
+				qcom,s2-type = <7>;
+			};
+		};
+	};
+};

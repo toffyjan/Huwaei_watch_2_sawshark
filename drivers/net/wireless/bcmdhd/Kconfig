@@ -1,0 +1,82 @@
+config BCMDHD
+	tristate "Broadcom FullMAC wireless cards support"
+	---help---
+	  This module adds support for wireless adapters based on
+	  Broadcom FullMAC chipset.
+
+	  If you choose to build a module, it'll be called dhd. Say M if
+	  unsure.
+
+config BCMDHD_SDIO
+	bool "SDIO bus interface support"
+	depends on BCMDHD && MMC
+        default y
+
+config BCMDHD_PCIE
+	bool "PCIe bus interface support"
+	depends on BCMDHD && PCI && !BCMDHD_SDIO
+
+config BCM4354
+	tristate "BCM4354 support"
+	depends on BCMDHD
+
+config BCM4356
+	tristate "BCM4356 support"
+	depends on BCMDHD
+	default n
+
+config BCMDHD_SEMCO_FW_PATH
+	depends on BCMDHD
+	string "Semco Firmware path"
+	default "/system/vendor/firmware/semco/fw_bcmdhd.bin"
+	---help---
+	  Path to the semco firmware file.
+
+config BCMDHD_MURATA_FW_PATH
+        depends on BCMDHD
+        string "Murata Firmware path"
+        default "/system/vendor/firmware/murata/fw_bcmdhd.bin"
+        ---help---
+          Path to the murata firmware file.
+
+config BCMDHD_SEMCO_NVRAM_PATH
+	depends on BCMDHD
+	string "Semco NVRAM path"
+	default "/system/etc/wifi/nv_semco.txt"
+	---help---
+	  Path to the semco calibration file.
+
+config BCMDHD_MURATA_NVRAM_PATH
+        depends on BCMDHD
+        string "Murata NVRAM path"
+        default "/system/etc/wifi/nv_murata.txt"
+        ---help---
+          Path to the murata calibration file.
+
+config DHD_USE_STATIC_BUF
+	bool "Enable memory preallocation"
+	depends on BCMDHD
+	default n
+	---help---
+	  Use memory preallocated in platform
+
+config DHD_USE_SCHED_SCAN
+	bool "Use CFG80211 sched scan"
+	depends on BCMDHD && CFG80211
+	default y
+	---help---
+	  Use CFG80211 sched scan
+
+config DHD_OF_SUPPORT
+	bool "Enable DHD OF SUPPORT"
+	depends on BCMDHD
+	default y
+	---help---
+	  enable dhd of support
+
+config WLAN_SDIO
+	bool "Enable SDIO interface for BCMDHD"
+	depends on BCMDHD
+	default y
+	---help---
+	  Use memory preallocated in platform

@@ -1,0 +1,46 @@
+/* Copyright (c) 2016,  HUAWEI TECHNOLOGIES CO., LTD.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+#include "dsi-panel-edo-rm67162-390w-cmd.dtsi"
+#include "dsi-panel-auo-w022-390w-cmd.dtsi"
+#include "dsi-panel-edo-rm67169-hvga-cmd.dtsi"
+
+/*delete the qcom dispaly dtsi*/
+&mdss_mdp {
+    /delete-node/ dsi_hx8394d_480_vid;
+    /delete-node/ dsi_hx8394d_720_vid;
+    /delete-node/ dsi_hx8394d_qhd_vid;
+
+    /delete-node/ dsi_auo_cx_qvga_cmd;
+    /delete-node/ dsi_auo_qvga_cmd;
+    /delete-node/ dsi_hx8394d_480_vid;
+    /delete-node/ dsi_hx8394d_720_vid;
+    /delete-node/ dsi_hx8394d_qhd_vid;
+};
+
+
+&mdss_dsi0 {
+	qcom,dsi-pref-prim-pan = <&dsi_auo_w022_390w_cmd>;
+	/delete-property/ qcom,platform-bklight-en-gpio;
+};
+
+&dsi_edo_rm67162_390w_cmd{
+	qcom,cont-splash-enabled;
+};
+
+&dsi_auo_w022_390w_cmd{
+	qcom,cont-splash-enabled;
+};
+
+&dsi_edo_rm67169_hvga_cmd{
+        qcom,cont-splash-enabled;
+};

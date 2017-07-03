@@ -1,0 +1,127 @@
+/* Copyright (c) 2016,  HUAWEI TECHNOLOGIES CO., LTD.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+&soc{
+	spi_0: spi@78b8000 {
+		compatible = "qcom,spi-qup-v2";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		reg-names = "spi_physical", "spi_bam_physical";
+		reg = <0x78b8000 0x600>,
+		      <0x7884000 0x23000>;
+		interrupt-names = "spi_irq", "spi_bam_irq";
+		interrupts = <0 98 0>, <0 238 0>;
+		spi-max-frequency = <19200000>;
+		pinctrl-names = "spi_default", "spi_sleep";
+		pinctrl-0 = <&spi1_default>;
+		pinctrl-1 = <&spi1_sleep>;
+		clocks = <&clock_gcc clk_gcc_blsp1_ahb_clk>,
+		<&clock_gcc clk_gcc_blsp1_qup4_spi_apps_clk>;
+		clock-names = "iface_clk", "core_clk";
+		qcom,infinite-mode = <0>;
+		qcom,use-bam;
+		qcom,use-pinctrl;
+		qcom,ver-reg-exists;
+		qcom,bam-consumer-pipe-index = <10>;
+		qcom,bam-producer-pipe-index = <11>;
+		qcom,master-id = <86>;
+	};
+
+	spi@78b8000 {
+		spidev1: qcom,spidev1@0 {
+			compatible = "rohm,dh2228fv";
+			reg = <0>;
+			spi-max-frequency = <50000000>;
+			spi-cpol;
+			spi-cpha;
+			spi-cs-high;
+		};
+	};
+
+	mcu,boot0 {
+		compatible = "mcu,boot0";
+		mcu_boot_0 = <&msm_gpio 41 0>;
+		pinctrl-names = "mcu_boot_0_active","mcu_boot_0_suspend";
+		pinctrl-0 = <&mcu_boot_0_active>;
+		pinctrl-1 = <&mcu_boot_0_suspend>;
+	};
+
+	mcu,reset {
+		compatible = "mcu,reset";
+		mcu_reset = <&msm_gpio 99 0>;
+		pinctrl-names = "mcu_reset_active","mcu_reset_sleep";
+		pinctrl-0 = <&mcu_reset_active>;
+		pinctrl-1 = <&mcu_reset_sleep>;
+	};
+
+	mcu,senserpower {
+		compatible = "mcu,senserpower";
+		mcu_senserpower = <&msm_gpio 98 0>;
+		pinctrl-names = "mcu_senser_power_active","mcu_senser_power_sleep";
+		pinctrl-0 = <&mcu_senser_power_active>;
+		pinctrl-1 = <&mcu_senser_power_sleep>;
+	};
+
+	mcu,wakeupmcu {
+		compatible = "mcu,wakeupmcu";
+		ap_wakeup_mcu = <&msm_gpio 49 0>;
+		pinctrl-names = "ap_wakeup_mcu_active","ap_wakeup_mcu_suspend";
+		pinctrl-0 = <&ap_wakeup_mcu_active>;
+		pinctrl-1 = <&ap_wakeup_mcu_suspend>;
+	};
+
+	mcu,wakeupap {
+		compatible = "mcu,wakeupap";
+		mcu_wakeup_ap = <&msm_gpio 50 0>;
+		interrupt-parent = <&msm_gpio>;
+		interrupts = <50 0>;
+		interrupt-names = "mcu_host_wake";
+		pinctrl-names = "mcu_wakeup_ap_active","mcu_wakeup_ap_suspend";
+		pinctrl-0 = <&mcu_wakeup_ap_active>;
+		pinctrl-1 = <&mcu_wakeup_ap_suspend>;
+	};
+
+	mcu,readsync {
+		compatible = "mcu,readsync";
+		ap_read_sync = <&msm_gpio 36 0>;
+		pinctrl-names = "ap_read_sync_active","ap_read_sync_suspend";
+		pinctrl-0 = <&ap_read_sync_active>;
+		pinctrl-1 = <&ap_read_sync_suspend>;
+	};
+
+	mcu,writesync {
+		compatible = "mcu,writesync";
+		ap_write_sync = <&msm_gpio 14 0>;
+		pinctrl-names = "ap_write_sync_active","ap_write_sync_suspend";
+		pinctrl-0 = <&ap_write_sync_active>;
+		pinctrl-1 = <&ap_write_sync_suspend>;
+	};
+
+	mcu,mcusleep {
+		compatible = "mcu,mcusleep";
+		ap_status = <&msm_gpio 26 0>;
+		pinctrl-names = "ap_status_active", "ap_status_suspend";
+		pinctrl-0 = <&ap_status_active>;
+		pinctrl-1 = <&ap_status_suspend>;
+	};
+
+	mcu,wakeupdisplay {
+		compatible = "mcu,wakeupdisplay";
+		mcu_wakeup_display = <&msm_gpio 31 0>;
+		interrupt-parent = <&msm_gpio>;
+		interrupts = <31 0>;
+		interrupt-names = "mcu_wake_display";
+		pinctrl-names = "mcu_wakeup_display_active", "mcu_wakeup_display_suspend";
+		pinctrl-0 = <&mcu_wakeup_display_active>;
+		pinctrl-1 = <&mcu_wakeup_display_suspend>;
+	};
+};
